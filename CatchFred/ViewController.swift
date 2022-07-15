@@ -25,12 +25,19 @@ class ViewController: UIViewController {
     
     var score=0
     var timer=Timer()
-    var counter=30
+    var counter=10
+    var showFredTimer=Timer()
+    var lastRandomNumber=0
     
     override func viewDidLoad() {
         super.viewDidLoad()
        
+        hideFreds()
+        
         timer=Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
+        
+        showFredTimer=Timer.scheduledTimer(timeInterval: 0.45, target: self, selector: #selector(showFred), userInfo: nil, repeats: true)
+
 
         addActionToImages()
     }
@@ -95,13 +102,66 @@ class ViewController: UIViewController {
     
     
     @objc func didImageClick(tapGestureRecognizer: UITapGestureRecognizer){
+        if counter<1{
+            return
+        }
+        
         let tappedImage = tapGestureRecognizer.view as! UIImageView
         print("Clicked: \(tappedImage.restorationIdentifier)")
         
         score+=1
         
         lbl_score.text="Score : \(score)"
+    }
+    
+    @objc func showFred(){
+        hideFreds()
         
+        if counter<0{
+            showFredTimer.invalidate()
+        }
+        
+        var randomInt = Int.random(in: 1..<10)
+        
+        while(lastRandomNumber == randomInt){
+            randomInt = Int.random(in: 1..<10)
+        }
+        lastRandomNumber=randomInt
+        
+        switch randomInt {
+        case 1:
+            fred1.isHidden=false
+        case 2:
+            fred2.isHidden=false
+        case 3:
+            fred3.isHidden=false
+        case 4:
+            fred4.isHidden=false
+        case 5:
+            fred5.isHidden=false
+        case 6:
+            fred6.isHidden=false
+        case 7:
+            fred7.isHidden=false
+        case 8:
+            fred8.isHidden=false
+        case 9:
+            fred9.isHidden=false
+        default:
+             break
+        }
+    }
+    
+    func hideFreds(){
+        fred1.isHidden=true
+        fred2.isHidden=true
+        fred3.isHidden=true
+        fred4.isHidden=true
+        fred5.isHidden=true
+        fred6.isHidden=true
+        fred7.isHidden=true
+        fred8.isHidden=true
+        fred9.isHidden=true
     }
 
 
