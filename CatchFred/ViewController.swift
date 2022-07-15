@@ -23,6 +23,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var fred8: UIImageView!
     @IBOutlet weak var fred9: UIImageView!
     
+    @IBOutlet weak var btnStart: UIButton!
+    @IBOutlet weak var entryView: UIView!
     var score=0
     var timer=Timer()
     var counter=10
@@ -33,12 +35,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
        
         hideFreds()
-        
-        timer=Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
-        
-        showFredTimer=Timer.scheduledTimer(timeInterval: 0.45, target: self, selector: #selector(showFred), userInfo: nil, repeats: true)
-
-
         addActionToImages()
     }
     
@@ -49,7 +45,7 @@ class ViewController: UIViewController {
 
             if counter<0{
                 timer.invalidate()
-                lbl_time.text="Time's up"
+                lbl_time.text="Time's up!"
             }
         }
     
@@ -118,7 +114,7 @@ class ViewController: UIViewController {
         hideFreds()
         
         if counter<0{
-            showFredTimer.invalidate()
+            timeIsUp()
         }
         
         var randomInt = Int.random(in: 1..<10)
@@ -163,7 +159,59 @@ class ViewController: UIViewController {
         fred8.isHidden=true
         fred9.isHidden=true
     }
+    
+    func timeIsUp(){
+        showFredTimer.invalidate()
+        
+        if (UserDefaults.standard.string(forKey: "highScore") == nil){
+            UserDefaults.standard.set(score, forKey: "highScore")
+            lbl_highScore.text="High Score : \(score)"
+        }else if score > Int(UserDefaults.standard.string(forKey: "highScore") ?? "0") ?? 0{
+            UserDefaults.standard.set(score, forKey: "highScore")
+            lbl_highScore.text="High Score : \(score)"
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            let alert=UIAlertController(title: "Time's up", message: "Would you play again?", preferredStyle: UIAlertController.Style.alert)
+                        let yesButton=UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { UIAlertAction in
+                            self.startGame()
+                        }
+                        let noButton=UIAlertAction(title: "No, close app", style: UIAlertAction.Style.default) { UIAlertAction in
+                            exit(0)
+                        }
 
+                        alert.addAction(yesButton)
+                        alert.addAction(noButton)
+                        self.present(alert, animated: true, completion: nil)
+        }
+        
+        
+    }
+    func startGame(){
+        
+         score=0
+         counter=10
+         lastRandomNumber=0
+        
+        lbl_score.text="Score : 0"
+        
+        if (UserDefaults.standard.string(forKey: "highScore") == nil){
+            lbl_highScore.text="High Score : 0"
+        }else{
+            let hScore=UserDefaults.standard.string(forKey: "highScore")
+            lbl_highScore.text="High Score : " + (hScore ?? "")
+        }
+        
+        timer=Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
+        
+        showFredTimer=Timer.scheduledTimer(timeInterval: 0.45, target: self, selector: #selector(showFred), userInfo: nil, repeats: true)
+    }
 
+    @IBAction func btnStartClicked(_ sender: Any) {
+        entryView.isHidden=true
+        btnStart.isHidden=true
+        startGame()
+    }
+    
 }
 
