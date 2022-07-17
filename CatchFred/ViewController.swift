@@ -23,6 +23,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var fred8: UIImageView!
     @IBOutlet weak var fred9: UIImageView!
     
+    var fredArray=[UIImageView]()
+    
     @IBOutlet weak var btnStart: UIButton!
     @IBOutlet weak var entryView: UIView!
     var score=0
@@ -34,6 +36,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
+        fredArray=[fred1,fred2,fred3,fred4,fred5,fred6,fred7,fred8,fred9]
         hideFreds()
         addActionToImages()
     }
@@ -149,15 +152,9 @@ class ViewController: UIViewController {
     }
     
     func hideFreds(){
-        fred1.isHidden=true
-        fred2.isHidden=true
-        fred3.isHidden=true
-        fred4.isHidden=true
-        fred5.isHidden=true
-        fred6.isHidden=true
-        fred7.isHidden=true
-        fred8.isHidden=true
-        fred9.isHidden=true
+        for fred in fredArray{
+            fred.isHidden=true
+        }
     }
     
     func timeIsUp(){
