@@ -105,8 +105,8 @@ class ViewController: UIViewController {
             return
         }
         
-        let tappedImage = tapGestureRecognizer.view as! UIImageView
-        print("Clicked: \(tappedImage.restorationIdentifier)")
+        //let tappedImage = tapGestureRecognizer.view as! UIImageView
+        //print("Clicked: \(tappedImage.restorationIdentifier)")
         
         score+=1
         
@@ -160,13 +160,7 @@ class ViewController: UIViewController {
     func timeIsUp(){
         showFredTimer.invalidate()
         
-        if (UserDefaults.standard.string(forKey: "highScore") == nil){
-            UserDefaults.standard.set(score, forKey: "highScore")
-            lbl_highScore.text="High Score : \(score)"
-        }else if score > Int(UserDefaults.standard.string(forKey: "highScore") ?? "0") ?? 0{
-            UserDefaults.standard.set(score, forKey: "highScore")
-            lbl_highScore.text="High Score : \(score)"
-        }
+       checkHighScore()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             let alert=UIAlertController(title: "Time's up", message: "Would you play again?", preferredStyle: UIAlertController.Style.alert)
@@ -184,6 +178,17 @@ class ViewController: UIViewController {
         
         
     }
+    
+    func checkHighScore(){
+        if (UserDefaults.standard.string(forKey: "highScore") == nil){
+            UserDefaults.standard.set(score, forKey: "highScore")
+            lbl_highScore.text="High Score : \(score)"
+        }else if score > Int(UserDefaults.standard.string(forKey: "highScore") ?? "0") ?? 0{
+            UserDefaults.standard.set(score, forKey: "highScore")
+            lbl_highScore.text="High Score : \(score)"
+        }
+    }
+    
     func startGame(){
         
          score=0
